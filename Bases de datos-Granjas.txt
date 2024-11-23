@@ -1,0 +1,89 @@
+CREATE TABLE granjeros(
+	granjero_id INTEGER PRIMARY KEY,
+	granjero_nombre  VARCHAR(50) NOT NULL,
+	granjero_telefono VARCHAR(50) NOT NULL,
+	granjero_correo VARCHAR(100) NOT NULL UNIQUE
+);
+
+CREATE TABLE granjas(
+	granja_id INTEGER PRIMARY KEY,
+	granja_nombre VARCHAR(100) NOT NULL,
+	granja_estado VARCHAR(50) NOT NULL,
+	granja_nresgitro INTEGER UNIQUE NOT NULL ,
+	granja_ubicacion  VARCHAR (20) NOT NULL,
+	granjero_id INTEGER UNIQUE,
+	CONSTRAINT fk_granjero 
+	FOREIGN KEY (granjero_id) 
+	REFERENCES granjeros(granjero_id)
+);
+
+CREATE TABLE parcelas(
+	par_id INTEGER PRIMARY KEY,
+	par_dimension  NUMERIC (10,2),
+	par_ubicacion VARCHAR (20) NOT NULL,
+	granja_id INTEGER UNIQUE,
+	CONSTRAINT fk_granja
+	FOREIGN KEY (granja_id) 
+	REFERENCES granjas(granja_id)
+);
+
+CREATE TABLE cultivos(
+	cul_id INTEGER PRIMARY KEY,
+	cul_fechaIni TIMESTAMP,
+	cul_fechaFin TIMESTAMP,
+	cul_estado TIMESTAMP NOT NULL,
+	par_id INTEGER UNIQUE,
+	CONSTRAINT fk_parcela
+	FOREIGN KEY (par_id) 
+	REFERENCES parcelas(par_id)
+);
+
+CREATE TABLE productos(
+	cul_nombre VARCHAR (10) NOT NULL,
+	cul_timepoGer VARCHAR (10) NOT NULL,
+	cul_precioVen NUMERIC (10,2) NOT NULL,
+	cul_especie VARCHAR (20) NOT NULL,
+	cul_descripcion VARCHAR (200)NOT NULL,
+	cul_id INTEGER UNIQUE,
+	CONSTRAINT fk_cultivo
+	FOREIGN KEY (cul_id) 
+	REFERENCES cultivos(cul_id)
+);
+
+CREATE TABLE actividades(
+	act_id INTEGER PRIMARY KEY,
+	act_nombre VARCHAR(30) NOT NULL,
+	act_fecha TIMESTAMP,
+	act_estado VARCHAR(20) NOT NULL,
+	granjero_id INTEGER UNIQUE,
+	CONSTRAINT fk_granjero
+	FOREIGN KEY (granjero_id) 
+	REFERENCES granjeros(granjero_id)
+);
+
+CREATE TABLE animales(
+	animal_id INTEGER PRIMARY KEY,
+	animal_nombre VARCHAR(20) NOT NULL,
+	animal_tipo VARCHAR (20) NOT NULL,
+	animal_precCompra NUMERIC(10,2) NOT NULL,
+	animal_precVenta NUMERIC(20,3) NOT NULL,
+	animal_raza VARCHAR(20) NOT NULL,
+	animal_fecIngreso TIMESTAMP,
+	granja_id INTEGER UNIQUE,
+	CONSTRAINT fk_granja
+	FOREIGN KEY (granja_id) 
+	REFERENCES granjas(granja_id)
+);
+
+CREATE TABLE elementos(
+	elem_id INTEGER PRIMARY KEY,
+	elem_nombre VARCHAR(20) NOT NULL,
+	elem_precCompra NUMERIC(10,2) NOT NULL,
+	elem_precVenta NUMERIC(20,3) NOT NULL,
+	elem_tipo VARCHAR (20) NOT NULL,
+	elem_fechaIng TIMESTAMP,
+	granja_id INTEGER UNIQUE,
+	CONSTRAINT fk_granja
+	FOREIGN KEY (granja_id) 
+	REFERENCES granjas(granja_id)	 
+);
